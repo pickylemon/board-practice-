@@ -2,6 +2,7 @@ package com.mywebsite.www.dao;
 
 import com.mywebsite.www.domain.BoardDto;
 import com.mywebsite.www.domain.PageHandler;
+import com.mywebsite.www.domain.SearchCondition;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,6 +20,10 @@ public interface BoardDao {
     List<BoardDto> selectAll() throws Exception;
 
     List<BoardDto> selectPage(@Param("ph") PageHandler ph) throws Exception;
+    List<BoardDto> selectSearchPage(@Param("ph") PageHandler ph, @Param("sc") SearchCondition sc) throws Exception;
+
+    int selectSearchCnt(@Param("sc") SearchCondition sc) throws Exception;
+
     //게시글 쓰기
     int insert(BoardDto boardDto) throws Exception;
 
@@ -34,4 +39,6 @@ public interface BoardDao {
     int deleteAll() throws Exception;
 
     int increaseViewCnt(Integer bno) throws Exception;
+
+    void initPk() throws Exception;
 }

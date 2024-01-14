@@ -2,6 +2,7 @@ package com.mywebsite.www.service;
 
 import com.mywebsite.www.domain.BoardDto;
 import com.mywebsite.www.domain.PageHandler;
+import com.mywebsite.www.domain.SearchCondition;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public interface BoardService {
 
     //한 페이지 가져오기
     List<BoardDto> getPage(PageHandler ph) throws Exception;
+
+    List<BoardDto> getSearchPage(PageHandler ph, SearchCondition sc) throws Exception;
+    int getSearchCnt(SearchCondition sc) throws Exception;
 
     //게시물 읽기
     @Transactional(rollbackFor = Exception.class)

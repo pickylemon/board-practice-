@@ -2,6 +2,7 @@ package com.mywebsite.www.controller;
 
 import com.mywebsite.www.domain.BoardDto;
 import com.mywebsite.www.domain.PageHandler;
+import com.mywebsite.www.domain.SearchCondition;
 import com.mywebsite.www.domain.UserDto;
 import com.mywebsite.www.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,25 @@ public class BoardController {
             e.printStackTrace();
         }
         return "myBoard";
+    }
+
+    @PostMapping("/search")
+    public String getSearchPage(Integer page, String search, Model m) {
+        //searchForm에서 넘어온 매개변수로 boardService 메서드 호출
+        System.out.println("[search] page = " + page);
+        if(page==null) page=1;
+        try {
+            SearchCondition sc = new SearchCondition(search,"",""); //제목으로만 검색
+            int totalCnt = boardService.getSearchCnt(sc);
+            PageHandler ph = new PageHandler(page,totalCnt);
+            List<BoardDto> list = boardService.getSearchPage(ph, sc);
+            m.addAttribute("ph",ph);
+            m.addAttribute("list",list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "myBoard";
+
     }
     @GetMapping("/read")
     public String myPost(Integer page, Integer bno, Model m, RedirectAttributes rattr){

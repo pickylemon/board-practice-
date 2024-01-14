@@ -3,12 +3,15 @@ package com.myWebsite.www.service;
 import com.mywebsite.www.dao.BoardDao;
 import com.mywebsite.www.domain.BoardDto;
 import com.mywebsite.www.domain.PageHandler;
+import com.mywebsite.www.domain.SearchCondition;
 import com.mywebsite.www.service.BoardService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -91,9 +94,34 @@ public class BoardServiceImplTest {
             BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
             boardDao.insert(boardDto);
         }
+    }
 
+    @Test
+    public void getSearchCnt() throws Exception {
+        boardDao.deleteAll();
+        boardDao.initPk();
+        for(int i=0; i<200; i++){
+            BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
+            boardDao.insert(boardDto);
+        }
+        SearchCondition sc = new SearchCondition("안녕17","","");
+        System.out.println("boardDao.selectSearchCnt(sc) = " + boardDao.selectSearchCnt(sc));
+    }
 
-
+    @Test
+    public void getSearchPage() throws Exception {
+        boardDao.deleteAll();
+        boardDao.initPk();
+        for(int i=0; i<200; i++){
+            BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
+            boardDao.insert(boardDto);
+        }
+        SearchCondition sc = new SearchCondition("안녕17","","");
+        int cnt = boardDao.selectSearchCnt(sc);
+        assertTrue(cnt==11);
+        PageHandler ph = new PageHandler(1,cnt);
+        List<BoardDto> list = boardDao.selectSearchPage(ph, sc);
+        System.out.println("list = " + list);
     }
 
 }

@@ -39,6 +39,24 @@
         LIMIT #{ph.pageSize} OFFSET #{ph.offset}
     </select>
 
+    <select id="selectSearchPage" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        WHERE title LIKE concat('%',#{sc.title},'%')
+        ORDER BY bno DESC, reg_date DESC
+        LIMIT #{ph.pageSize} OFFSET #{ph.offset}
+    </select>
+
+    <select id="selectSearchCnt" resultType="int">
+        SELECT count(*) FROM board
+        WHERE title LIKE concat('%',#{sc.title},'%');
+    </select>
+
+<!--    <select id="selectSearchPage" resultType="BoardDto">-->
+<!--        <include refid="selectFromBoard"/>-->
+<!--        ORDER BY bno DESC, reg_date DESC-->
+<!--        LIMIT #{ph.pageSize} OFFSET #{ph.offset}-->
+<!--    </select>-->
+
     <!--3. 게시물 목록 가져오기 (페이징 적용 안함) -->
     <select id="selectAll" resultType="BoardDto">
         <include refid="selectFromBoard"/>
@@ -83,6 +101,11 @@
         UPDATE board
         SET view_cnt = view_cnt + 1
         WHERE bno = #{bno}
+    </update>
+
+    <update id="initPk">
+        ALTER table board
+        auto_increment = 1;
     </update>
 
 </mapper>

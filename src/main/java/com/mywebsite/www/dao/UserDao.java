@@ -22,4 +22,6 @@ public interface UserDao {
     int deleteForAdmin(String id) throws Exception;
 
     int deleteAll() throws Exception;
+
+
 }

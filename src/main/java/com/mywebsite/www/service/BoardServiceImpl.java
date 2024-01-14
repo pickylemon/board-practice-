@@ -3,6 +3,7 @@ package com.mywebsite.www.service;
 import com.mywebsite.www.dao.BoardDao;
 import com.mywebsite.www.domain.BoardDto;
 import com.mywebsite.www.domain.PageHandler;
+import com.mywebsite.www.domain.SearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDto> getPage(PageHandler ph) throws Exception {
         return boardDao.selectPage(ph);
+    }
+    @Override
+    public List<BoardDto> getSearchPage(PageHandler ph, SearchCondition sc) throws Exception {
+        return boardDao.selectSearchPage(ph, sc);
+    }
+
+    @Override
+    public int getSearchCnt(SearchCondition sc) throws Exception {
+        return boardDao.selectSearchCnt(sc);
     }
 
     //게시물 읽기
@@ -68,5 +78,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public int removeAll() throws Exception {
         return boardDao.deleteAll();
+    }
+
+    private void initPk() throws Exception {
+        boardDao.initPk();
     }
 }
