@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mywebsite.www.dao.UserDao">
+    <select id="count" resultType="int">
+        SELECT count(*) FROM user_info;
+    </select>
+
+    <select id="selectAll" resultType="UserDto">
+        <include refid="selectFromUserInfo"/>
+        ORDER BY reg_date DESC, membership_level ASC
+    </select>
+
+    <select id="select" parameterType = "string" resultType="UserDto">
+        <include refid="selectFromUserInfo"/>
+        WHERE id = #{id}
+    </select>
+
+    <sql id="selectFromUserInfo">
+        SELECT id, pwd, name, email, birth, sns, reg_date, membership_level
+        FROM user_info
+    </sql>
+
+    <delete id="deleteAll">
+        DELETE FROM user_info;
+    </delete>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM user_info WHERE id=#{id} and pwd=#{pwd};
+    </delete>
+
+    <delete id="deleteForAdmin" parameterType="map">
+        DELETE FROM user_info WHERE id=#{id};
+    </delete>
+
+    <insert id="insert" parameterType="UserDto">
+        INSERT INTO user_info
+            (id, pwd, name, email, birth, sns)
+        VALUES
+            (#{id},#{pwd},#{name},#{email},#{birth},#{sns})
+    </insert>
+
+    <update id="update" parameterType="UserDto">
+        UPDATE user_info
+        SET pwd = #{pwd},
+            name = #{name},
+            email = #{email},
+            birth = #{birth},
+            sns = #{sns},
+            membership_level = #{membership_level}
+        WHERE id = #{id} and pwd = #{pwd}
+    </update>
+</mapper>

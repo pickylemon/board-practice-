@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--현재 작성중인 Mapper와 연결시켜줄 DAO객체를 명시한다-->
+<mapper namespace="com.mywebsite.www.dao.BoardDao">
+    <!--
+    1. 게시물 갯수 세기 (count)
+    2. 게시물 목록/리스트 가져오기 (select)
+    3. 게시글 읽기(select)
+    4. 게시물 쓰기 (write)
+    5. 게시물 수정 (modify)
+    6. 게시물 삭제 (delete) bno와 writer를 모두 확인
+    7. 게시물 삭제 for Admin
+    8. 게시글 전체 삭제
+    -->
+
+    <!--1. 게시물 갯수 세기-->
+    <select id="count" resultType="int">
+        SELECT count(*)
+        FROM board
+    </select>
+
+    <sql id="selectFromBoard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date, up_date
+        FROM board
+    </sql>
+
+    <!--2. 게시물 읽기 -->
+    <select id="select" parameterType="int" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        WHERE bno = #{bno}
+        ORDER BY bno DESC, reg_date DESC
+    </select>
+
+    <select id="selectPage" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        ORDER BY bno DESC, reg_date DESC
+        LIMIT #{ph.pageSize} OFFSET #{ph.offset}
+    </select>
+
+    <!--3. 게시물 목록 가져오기 (페이징 적용 안함) -->
+    <select id="selectAll" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        ORDER BY bno DESC, reg_date DESC
+    </select>
+
+    <!-- 4. 게시물 쓰기 -->
+    <insert id="insert" parameterType="BoardDto">
+        INSERT INTO board
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer}) <!--괄호 빼먹으면 에러남. 사소한 건데 놓치기 쉬움-->
+    </insert>
+
+    <!--5. 게시물 수정 (bno와 writer가 모두 같을 때 한정) -->
+    <update id="update" parameterType="BoardDto">
+        UPDATE board
+        SET title = #{title},
+            content = #{content}
+        WHERE bno = #{bno} and writer = #{writer}
+    </update>
+
+    <!-- 6. 게시물 삭제 (bno와 writer를 모두 확인) -->
+    <delete id="delete" parameterType="map">
+        DELETE FROM board
+        WHERE bno = #{bno} and writer = #{writer}
+    </delete>
+
+    <!--7. 게시물 삭제 (Admin전용 / bno만 확인) -->
+    <delete id="deleteForAdmin" parameterType="int">
+        DELETE FROM board
+        WHERE bno = #{bno}
+    </delete>
+
+    <!--8. 게시글 전체 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM board
+    </delete>
+
+    <!--9. viewCnt 증가, 해당 게시글(bno필요)의 조회수가 증가하는 것.-->
+    <update id="increaseViewCnt" parameterType="int">
+        UPDATE board
+        SET view_cnt = view_cnt + 1
+        WHERE bno = #{bno}
+    </update>
+
+</mapper>
