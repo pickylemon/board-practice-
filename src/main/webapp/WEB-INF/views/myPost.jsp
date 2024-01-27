@@ -59,7 +59,7 @@
         listBtn.addEventListener("click",function(){
             <%--alert("${boardDto}");--%>
             <%--alert(${page});--%>
-            location.href = "<c:url value='/board/boardList?page=${page}'/>";
+            location.href = "<c:url value='/board/boardList${sc.queryParam}'/>";
         });
         // const delBtn = document.querySelector(".delBtn");
         delBtn.addEventListener("click",function(){
@@ -79,7 +79,7 @@
 
             //그냥 post말고 get으로 보내보기
             <%--let bno = ${boardDto.bno};--%>
-            location.href = '<c:url value="/board/delete?bno=${boardDto.bno}&page=${page}"/>';
+            location.href = '<c:url value="/board/delete${sc.queryParam}&bno=${boardDto.bno}"/>';
         });
         // const modBtn = document.querySelector(".modBtn");
         modBtn.addEventListener("click",function(){
@@ -97,7 +97,7 @@
             }
             else{ //readonly가 false면
                 let form = document.querySelector("#myPost");
-                form.action = '<c:url value="/board/modify?page=${page}"/>';
+                form.action = '<c:url value="/board/modify${sc.queryParam}"/>';
                 form.method = 'post';
                 form.submit();
             }

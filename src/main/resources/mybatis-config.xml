@@ -6,5 +6,8 @@
     <typeAliases>
         <typeAlias alias="UserDto" type="com.mywebsite.www.domain.UserDto"/>
         <typeAlias alias="BoardDto" type="com.mywebsite.www.domain.BoardDto"/>
+        <typeAlias alias="SearchCondition" type="com.mywebsite.www.domain.SearchCondition"/>
+        <typeAlias alias="PageHandler" type="com.mywebsite.www.domain.PageHandler"/>
+        <typeAlias alias="PageHandler" type="com.mywebsite.www.domain.CommentDto"/>
     </typeAliases>
 </configuration>

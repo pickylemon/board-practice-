@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +24,13 @@ public class BoardController {
     BoardService boardService;
 
     @GetMapping("/boardList")
-    public String myBoard(Integer page, HttpServletRequest request, HttpSession session, Model m, RedirectAttributes rattr) {
+    public String myBoard(Integer page, SearchCondition sc, HttpServletRequest request, HttpSession session, Model m, RedirectAttributes rattr) {
         //로그인 여부 먼저 검사해서 로그인 안되어 있으면 로그인 페이지로 넘기기
-        System.out.println("[boardList] page = " + page);
-        if(page==null) page=1;
+        System.out.println("sc = " + sc);
+        System.out.println("[boardList] page = " + sc.getPage());
+//        if(sc.getPage()==null) sc.setPage(1);
+//        if(sc.getKeyword()==null) sc.setKeyword("");
+//        if(sc.getOption()==null) sc.setOption("A"); //SearchCondition의 iv를 명시적 초기화해주고 기본생성자도 만들어줘서 이거 안써도 됨.
         if(session.getAttribute("id")==null){
             String msg = "로그인이 필요한 페이지입니다.";
             String toURL = request.getRequestURL().toString(); //toURI하면 redirect시 context root가 중복된다.
@@ -39,13 +39,20 @@ public class BoardController {
             return "redirect:/login/login";
         }
         try {
-            int totalCnt = boardService.getCount();
-            System.out.println("page = " + page);
+//            int totalCnt = boardService.getCount();
+//            int totalCnt2 = boardService.getSearchCnt(sc);
+//            System.out.println("totalCnt == totalCnt2 = " + (totalCnt == totalCnt2));
+//            System.out.println("page = " + page);
+//            System.out.println("totalCnt = " + totalCnt);
+            System.out.println("sc = " + sc);
+            int totalCnt = boardService.getSearchCnt(sc);
             System.out.println("totalCnt = " + totalCnt);
-            PageHandler ph = new PageHandler(page,totalCnt);
-//            System.out.println("ph = " + ph);
-            List<BoardDto> list = boardService.getPage(ph);
-//            System.out.println("list = " + list);
+            PageHandler ph = new PageHandler(sc,totalCnt);
+            System.out.println("ph = " + ph);
+            List<BoardDto> list = boardService.getSearchPage(ph,sc);
+            System.out.println("list = " + list);
+            System.out.println("list.size() = " + list.size());
+            m.addAttribute("sc",sc);
             m.addAttribute("ph",ph);
             m.addAttribute("list",list);
         } catch (Exception e) {
@@ -54,16 +61,27 @@ public class BoardController {
         return "myBoard";
     }
 
-    @PostMapping("/search")
-    public String getSearchPage(Integer page, String search, Model m) {
+    @GetMapping("/search")
+    public String getSearchPage(Integer page, SearchCondition sc, Model m, HttpServletRequest request) {
         //searchForm에서 넘어온 매개변수로 boardService 메서드 호출
-        System.out.println("[search] page = " + page);
+//        Enumeration<String> params = request.getParameterNames();
+//        System.out.println("params = " + params);
+//        while(params.hasMoreElements()){
+//            System.out.println("params.nextElement() = " + params.nextElement());
+//        }
+//        System.out.println("request.getParameter(\"search\") = " + request.getParameter("search"));
+//        System.out.println("request.getParameter(\"keyword\") = " + request.getParameter("keyword"));
+        System.out.println("sc = " + sc);
+        m.addAttribute("sc",sc);
         if(page==null) page=1;
         try {
-            SearchCondition sc = new SearchCondition(search,"",""); //제목으로만 검색
+//            SearchCondition sc = new SearchCondition(option,keyword); //제목으로만 검색
             int totalCnt = boardService.getSearchCnt(sc);
-            PageHandler ph = new PageHandler(page,totalCnt);
+            System.out.println("totalCnt = " + totalCnt);
+            PageHandler ph = new PageHandler(sc,totalCnt);
+            System.out.println("ph = " + ph);
             List<BoardDto> list = boardService.getSearchPage(ph, sc);
+            System.out.println("list = " + list);
             m.addAttribute("ph",ph);
             m.addAttribute("list",list);
         } catch (Exception e) {
@@ -73,12 +91,14 @@ public class BoardController {
 
     }
     @GetMapping("/read")
-    public String myPost(Integer page, Integer bno, Model m, RedirectAttributes rattr){
+    public String myPost(Integer page, SearchCondition sc, Integer bno, Model m, RedirectAttributes rattr){
         try {
+            System.out.println("sc = " + sc);
             System.out.println("[read] page = " + page);
             System.out.println("bno = " + bno);
             BoardDto boardDto = boardService.read(bno);
-            m.addAttribute("page",page); //myPost로 전달이 안된다. 그냥 page로 적으면 안됨. 숫자가 들어가는거라서.
+            m.addAttribute("sc",sc);
+//            m.addAttribute("page",page); //myPost로 전달이 안된다. 그냥 page로 적으면 안됨. 숫자가 들어가는거라서.
             m.addAttribute(boardDto);
             return "myPost";
         } catch (Exception e) {
@@ -90,9 +110,11 @@ public class BoardController {
     }
 
     @GetMapping("/delete") // form으로부터 boardDto내용을 받아와야 해서 Post로 요청받음.
-    public String delete(Integer page, Integer bno, HttpServletRequest request, RedirectAttributes rattr, Model m, HttpSession session) throws Exception{
+    public String delete(Integer page, SearchCondition sc, Integer bno, HttpServletRequest request, RedirectAttributes rattr, Model m, HttpSession session) throws Exception{
         String writer = (String)session.getAttribute("id");
 //        String writer = "강아지";
+        System.out.println("[delete]");
+        System.out.println("sc = " + sc);
         System.out.println("bno = " + bno);
         System.out.println(writer);
         Enumeration paramNames = request.getParameterNames();
@@ -105,6 +127,8 @@ public class BoardController {
             System.out.println("rowCnt = " + rowCnt);
             if(rowCnt==1){ //삭제 성공시
                 System.out.println("rowCnt = " + rowCnt);
+                rattr.addAttribute("keyword",sc.getKeyword());
+                rattr.addAttribute("option", sc.getOption());
                 rattr.addAttribute("page",page);
                 rattr.addFlashAttribute("msg","DEL_OK");
                 return "redirect:/board/boardList";
@@ -123,8 +147,10 @@ public class BoardController {
         }
     }
     @PostMapping("/modify")
-    public String modify(Integer page, HttpSession session, BoardDto boardDto, BindingResult result, RedirectAttributes rattr, Model m) throws Exception {
+    public String modify(Integer page, SearchCondition sc, HttpSession session, BoardDto boardDto, BindingResult result, RedirectAttributes rattr, Model m) throws Exception {
         // 자꾸 dto가 안들어가길래 bindingresult붙여봄. ...슬래시를 따옴표 안에 포함시켜서 난 에러...,,,맨날 오타 내는구나,,,,,,,,,
+        System.out.println("[modify]");
+        System.out.println("sc = " + sc);
         System.out.println("result = " + result);
         System.out.println("boardDto = " + boardDto);
 
@@ -136,6 +162,8 @@ public class BoardController {
 
             int rowCnt = boardService.modify(boardDto);
             if(rowCnt == 1){
+                rattr.addAttribute("keyword",sc.getKeyword());
+                rattr.addAttribute("option",sc.getOption());
                 rattr.addAttribute("page",page);
                 rattr.addFlashAttribute("msg","MOD_OK");
                 return "redirect:/board/boardList";

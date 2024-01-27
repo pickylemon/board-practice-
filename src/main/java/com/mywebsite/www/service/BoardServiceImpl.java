@@ -80,7 +80,7 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.deleteAll();
     }
 
-    private void initPk() throws Exception {
-        boardDao.initPk();
-    }
+//    private void initPk() throws Exception {
+//        boardDao.initPk();
+//    }
 }

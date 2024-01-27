@@ -125,13 +125,14 @@
                 <th class="writer"> 작성자 </th>
                 <th class="view_cnt"> 조회수 </th>
                 <th class="reg_date"> 등록일 </th>
+
             </tr>
             <c:forEach var="boardDto" items="${list}">
                 <tr class="hover">
                     <td class="no">  ${boardDto.bno} </td>
 <%--                    <td class="no" style="cursor:pointer" onclick="location.href='<c:url value="/board/read?bno=${boardDto.bno}&page=${ph.page}"/>'"> ${boardDto.title} </a></td>--%>
-                    <td class="no" style="cursor:pointer"><a href="<c:url value='/board/read?bno=${boardDto.bno}'/>"> ${boardDto.title} </a></td>
-                        <%--                <a href="<c:url value='/board/read?bno=${boardDto.bno}'/>">--%>
+<%--                    <td class="no" style="cursor:pointer"><a href="<c:url value='/board/read?bno=${boardDto.bno}&page=${ph.sc.page}&option=${sc.option}&keyword=${sc.keyword}'/>"> ${boardDto.title} </a></td>--%>
+                    <td class="no" style="cursor:pointer"><a href="<c:url value='/board/read${sc.queryParam}&bno=${boardDto.bno}'/>">${boardDto.title} <i class="far fa-regular fa-comment" value="a"></i> </a></td>
                     <td class="writer">  ${boardDto.writer} </td>
                     <td class="view_cnt">  ${boardDto.view_cnt} </td>
                     <fmt:formatDate value="${boardDto.reg_date}" type="both" pattern="hh:mm YY/MM/dd" var="date"/>
@@ -142,24 +143,24 @@
     </form>
 
     <form id="searchForm">
-<%--        <select name="search" id="options">--%>
-<%--            <option value="T">제목</option>--%>
-<%--            <option value="A">제목+내용</option>--%>
-<%--            <option value="W">작성자</option>--%>
-<%--        </select>--%>
-        <input type="text" name="search" placeholder="검색어를 입력하세요."/>
+        <select name="option" id="options">
+            <option value="T" ${sc.option=='T'? "selected" : "" }>제목</option>
+            <option value="A" ${sc.option=='A' ? "selected" : "" }>제목+내용</option>
+            <option value="W" ${sc.option=='W' ? "selected" : ""}>작성자</option>
+        </select>
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요." value="${sc.keyword}"/>
         <i id="submitBtn" class="fas fa-search"></i>
     </form>
 
     <div id="naviBar">
         <c:if test="${ph.prevPage}">
-            <span><a href="<c:url value='/board/boardList?page=${ph.startPage-1}'/>">[PREV] </a></span>
+            <span><a href="<c:url value='/board/boardList?page=${ph.startPage-1}&keyword=${sc.keyword}&option=${sc.option}'/>">[PREV] </a></span>
         </c:if>
         <c:forEach var="i" begin="${ph.startPage}" end="${ph.endPage}">
-            <span><a class="page" href="<c:url value='/board/boardList?page=${i}'/>">${i} </a></span>
+            <span><a class="page" href="<c:url value='/board/boardList?page=${i}&keyword=${sc.keyword}&option=${sc.option}'/>">${i} </a></span>
         </c:forEach>
         <c:if test="${ph.nextPage}">
-            <span><a href="<c:url value='/board/boardList?page=${ph.endPage+1}'/>">[NEXT]</a></span>
+            <span><a href="<c:url value='/board/boardList?page=${ph.endPage+1}&keyword=${sc.keyword}&option=${sc.option}'/>">[NEXT]</a></span>
         </c:if>
         <button type="button" class="wrtBtn">글쓰기</button>
     </div>
@@ -189,8 +190,11 @@
         const submitBtn = document.querySelector("#submitBtn");
         submitBtn.addEventListener("click",function(){
             const searchForm = document.querySelector("#searchForm");
-            searchForm.action = "<c:url value='/board/search?page=${ph.page}'/>";
-            searchForm.method = "post";
+            <%--searchForm.action = "<c:url value='/board/boardList?page=${ph.sc.page}&keyword=${sc.keyword}&option=${sc.option}'/>";--%>
+            searchForm.action = "<c:url value='/board/boardList'/>";
+
+            <%--alert(${sc.queryParam});--%>
+            searchForm.method = "get";
             searchForm.submit();
         })
 

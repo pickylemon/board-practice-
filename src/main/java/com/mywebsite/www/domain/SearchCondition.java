@@ -1,59 +1,67 @@
 package com.mywebsite.www.domain;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 public class SearchCondition {
-    private String title;
-    private String writer;
-    private String content;
-    public SearchCondition(){
-        this("","","");
-    }
-//    public SearchCondition(String title){
-//        this(title, "", "");
+    private Integer page=1;
+    private String keyword="";
+    private String option="A";
+
+//    public SearchCondition(){
+//        this("A","", 1);
 //    }
-//    public SearchCondition(String title, String content){
-//        this(title, "", content);
-//    }
-//
-//    public SearchCondition(String writer){
-//        this("", writer, "");
-//    }
+    public SearchCondition(String option, String keyword, Integer page) {
+        this.option = option;
+        this.keyword = keyword;
+        this.page = page;
+        System.out.println("getQueryParam() = " + getQueryParam());
+    }
+    public SearchCondition(){}
 
-    public SearchCondition(String title, String writer, String content) {
-        this.title = title;
-        this.writer = writer;
-        this.content = content;
+
+    public Integer getPage() {
+        return page;
     }
 
-    public String getTitle() {
-        return title;
+    public void setPage(Integer page) {
+        this.page = page;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getKeyword() {
+        return keyword;
     }
 
-    public String getWriter() {
-        return writer;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    public String getOption() {
+        return option;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setOption(String option) {
+        this.option = option;
     }
 
     @Override
     public String toString() {
         return "SearchCondition{" +
-                "title='" + title + '\'' +
-                ", writer='" + writer + '\'' +
-                ", content='" + content + '\'' +
+                "page=" + page +
+                ", keyword='" + keyword + '\'' +
+                ", option='" + option + '\'' +
                 '}';
     }
+
+    public String getQueryParam(){
+        return getQueryParam(getPage());
+    }
+    public String getQueryParam(Integer page){
+        return UriComponentsBuilder.newInstance()
+                .queryParam("page",page)
+                .queryParam("option",getOption())
+                .queryParam("keyword",getKeyword())
+                .build()
+                .toString();
+    }
+
 }

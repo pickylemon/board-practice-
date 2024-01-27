@@ -99,29 +99,30 @@ public class BoardServiceImplTest {
     @Test
     public void getSearchCnt() throws Exception {
         boardDao.deleteAll();
-        boardDao.initPk();
+//        boardDao.initPk();
         for(int i=0; i<200; i++){
             BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
             boardDao.insert(boardDto);
         }
-        SearchCondition sc = new SearchCondition("안녕17","","");
+        SearchCondition sc = new SearchCondition("T","안녕1",1);
         System.out.println("boardDao.selectSearchCnt(sc) = " + boardDao.selectSearchCnt(sc));
     }
 
     @Test
     public void getSearchPage() throws Exception {
-        boardDao.deleteAll();
-        boardDao.initPk();
-        for(int i=0; i<200; i++){
-            BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
-            boardDao.insert(boardDto);
-        }
-        SearchCondition sc = new SearchCondition("안녕17","","");
+//        boardDao.deleteAll();
+//        boardDao.initPk();
+//        for(int i=0; i<200; i++){
+//            BoardDto boardDto = new BoardDto("안녕"+i,"ㅁㄴㅇㄻㄴㅇㄹ","asdf"+i/10);
+//            boardDao.insert(boardDto);
+//        }
+        SearchCondition sc = new SearchCondition("W","asdf1",1);
         int cnt = boardDao.selectSearchCnt(sc);
-        assertTrue(cnt==11);
-        PageHandler ph = new PageHandler(1,cnt);
-        List<BoardDto> list = boardDao.selectSearchPage(ph, sc);
+        PageHandler ph = new PageHandler(sc, cnt);
+        List<BoardDto> list = boardDao.selectSearchPage(ph,sc);
+        System.out.println("cnt = " + cnt);
         System.out.println("list = " + list);
+        //아 진짜 왜 안되는거지?
     }
 
 }

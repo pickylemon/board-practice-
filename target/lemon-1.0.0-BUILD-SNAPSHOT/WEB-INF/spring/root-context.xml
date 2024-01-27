@@ -18,15 +18,15 @@
 		<property name="password" value="0104"/>
 	</bean>
 
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mywebsite.www.dao"/>
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-	</bean>
+<!--	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+<!--		<property name="basePackage" value="com.mywebsite.www.dao"/>-->
+<!--		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
+<!--	</bean>-->
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation"  value="classpath:mybatis-config.xml"/>
-		<property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+		<property name="mapperLocations" value="classpath:mapper/*Mapper*.xml"/>
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

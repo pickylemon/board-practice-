@@ -4,31 +4,32 @@ import org.springframework.stereotype.Component;
 
 
 public class PageHandler {
-    Integer page; //현재 페이지
-    Integer totalCnt; //총 게시글 수
-    Integer pageSize = 15; //한 페이지에 보여줄 글 수
-    Integer startPage; //navi의 startPage
-    Integer endPage;  //navi의 endPage
-    Integer naviSize = 10; //navi의 크기
-    Integer totalPage;
-    boolean prevPage;
-    boolean nextPage;
-    Integer offset;
+//    Integer page; //현재 페이지
+
+    private SearchCondition sc;
+    private Integer totalCnt; //총 게시글 수
+    private Integer pageSize = 15; //한 페이지에 보여줄 글 수
+    private Integer startPage; //navi의 startPage
+    private Integer endPage;  //navi의 endPage
+    private Integer naviSize = 10; //navi의 크기
+    private Integer totalPage;
+    private boolean prevPage;
+    private boolean nextPage;
+//    private Integer offset;
 
     public PageHandler(){}
-    public PageHandler(Integer page, Integer totalCnt){
-        this.page = page;
+    public PageHandler(SearchCondition sc, Integer totalCnt){
+        this.sc = sc;
         this.totalCnt = totalCnt;
         this.totalPage = (totalCnt-1) / pageSize + 1;
-        this.startPage = (page-1)/naviSize*naviSize+1;
+        this.startPage = (sc.getPage()-1)/naviSize*naviSize+1;
         this.endPage = Math.min(startPage + naviSize - 1, totalPage);
         this.prevPage = startPage!=1;
         this.nextPage = !endPage.equals(totalPage);
-        this.offset = (page-1)*pageSize;
     }
 
     public void print(){
-        System.out.println("page = " + page);
+        System.out.println("page = " + sc.getPage());
         if(prevPage){
             System.out.print("<< ");
         }
@@ -41,12 +42,12 @@ public class PageHandler {
         System.out.println();
     }
 
-    public Integer getPage() {
-        return page;
+    public SearchCondition getSc() {
+        return sc;
     }
 
-    public void setPage(Integer page) {
-        this.page = page;
+    public void setSc(SearchCondition sc) {
+        this.sc = sc;
     }
 
     public Integer getTotalCnt() {
@@ -114,17 +115,18 @@ public class PageHandler {
     }
 
     public Integer getOffset() {
-        return offset;
+        return (sc.getPage()-1)*pageSize;
     }
 
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
+//    public void setOffset(Integer offset) {
+//        this.offset = offset;
+//    }
+
 
     @Override
     public String toString() {
         return "PageHandler{" +
-                "page=" + page +
+                "sc=" + sc +
                 ", totalCnt=" + totalCnt +
                 ", pageSize=" + pageSize +
                 ", startPage=" + startPage +
@@ -133,7 +135,7 @@ public class PageHandler {
                 ", totalPage=" + totalPage +
                 ", prevPage=" + prevPage +
                 ", nextPage=" + nextPage +
-                ", offset=" + offset +
+                ", offset=" + getOffset() +
                 '}';
     }
 }
