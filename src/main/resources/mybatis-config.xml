@@ -8,6 +8,7 @@
         <typeAlias alias="BoardDto" type="com.mywebsite.www.domain.BoardDto"/>
         <typeAlias alias="SearchCondition" type="com.mywebsite.www.domain.SearchCondition"/>
         <typeAlias alias="PageHandler" type="com.mywebsite.www.domain.PageHandler"/>
-        <typeAlias alias="PageHandler" type="com.mywebsite.www.domain.CommentDto"/>
+        <typeAlias alias="CommentDto" type="com.mywebsite.www.domain.CommentDto"/>
+        <typeAlias alias="FileUploadDto" type="com.mywebsite.www.domain.FileUploadDto"/>
     </typeAliases>
 </configuration>

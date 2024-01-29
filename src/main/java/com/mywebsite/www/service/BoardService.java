@@ -26,6 +26,7 @@ public interface BoardService {
 
     //게시물 쓰기
     int write(BoardDto boardDto) throws Exception;
+//    int write(BoardDto boardDto) throws Exception;
 
     //게시물 수정
     int modify(BoardDto boardDto) throws Exception;

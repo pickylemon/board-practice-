@@ -26,6 +26,7 @@ public interface BoardDao {
 
     //게시글 쓰기
     int insert(BoardDto boardDto) throws Exception;
+//    int insert(Map map) throws Exception;
 
     //게시글 수정
     int update(BoardDto boardDto) throws Exception;
@@ -39,6 +40,12 @@ public interface BoardDao {
     int deleteAll() throws Exception;
 
     int increaseViewCnt(Integer bno) throws Exception;
+
+    int increaseCommentCnt(Integer bno, Integer cnt) throws Exception;
+
+    int setComment0(Integer bno) throws Exception;
+
+
 
 //    void initPk() throws Exception;
 }

@@ -1,5 +1,7 @@
 package com.mywebsite.www.domain;
 
+import java.sql.Blob;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,9 +14,16 @@ public class BoardDto {
     private Integer comment_cnt;
     private Date reg_date;
     private Date up_date;
+    private String image;
 
     public BoardDto(){}
 
+    public BoardDto(String title, String content, String writer, String image) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.image = image;
+    }
     public BoardDto(String title, String content, String writer) {
         this.title = title;
         this.content = content;
@@ -85,13 +94,21 @@ public class BoardDto {
         this.up_date = up_date;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BoardDto boardDto = (BoardDto) o;
-        return Objects.equals(bno, boardDto.bno) && Objects.equals(title, boardDto.title) && Objects.equals(content, boardDto.content) && Objects.equals(writer, boardDto.writer) && Objects.equals(reg_date, boardDto.reg_date);
+    public String getImage() {
+        return image;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BoardDto boardDto = (BoardDto) o;
+    return Objects.equals(bno, boardDto.bno) && Objects.equals(title, boardDto.title) && Objects.equals(content, boardDto.content) && Objects.equals(writer, boardDto.writer) && Objects.equals(reg_date, boardDto.reg_date);
+}
 
     @Override
     public int hashCode() {
@@ -112,4 +129,5 @@ public class BoardDto {
                 '}';
     }
 }
+
 

@@ -8,7 +8,55 @@
     2. comment 수정
     3. comment 삭제
     4. comment 읽기
+    5. 모든 댓글 읽기
     -->
-    <select id="select" parameterType="map" resultType="commentDto">
+    <select id="count" parameterType="int" resultType="int">
+        SELECT count(*) FROM comment
+        WHERE bno = #{bno}
     </select>
+
+    <sql id="selectFromComment">
+        SELECT cno, bno, ifnull(pcno,cno) as pcno, comment, commenter, reg_date, up_date FROM comment
+    </sql>
+
+    <select id="select" parameterType="int" resultType="CommentDto">
+        <include refid="selectFromComment"/>
+        WHERE cno = #{cno}
+    </select>
+
+    <select id="selectAll" parameterType="int" resultType="CommentDto">
+        <include refid="selectFromComment"/>
+        WHERE bno = #{bno}
+        ORDER BY reg_date DESC
+    </select>
+
+    <insert id="insert" parameterType="CommentDto">
+        INSERT INTO comment
+            (bno, pcno, comment, commenter)
+        VALUES
+            (#{bno}, #{pcno}, #{comment}, #{commenter})
+    </insert>
+
+    <update id="update" parameterType="CommentDto">
+        UPDATE comment
+        SET comment = #{comment},
+            up_date = #{up_date}
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </update>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM comment
+        WHERE cno = #{cno} and commenter = #{commenter}
+    </delete>
+
+    <delete id="deleteAll" parameterType="int">
+        DELETE FROM comment
+        WHERE bno = #{bno}
+    </delete>
+
+    <update id="initPk">
+        ALTER table comment
+        auto_increment = 1;
+    </update>
+
 </mapper>

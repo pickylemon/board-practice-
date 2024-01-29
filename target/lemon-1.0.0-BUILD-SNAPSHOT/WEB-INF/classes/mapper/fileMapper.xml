@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mywebsite.www.dao.FileUploadDao">
+    <insert id="insert" parameterType="FileUploadDto">
+        INSERT INTO imgtbl
+        (file, title)
+        VALUES (#{file}, #{title})
+    </insert>
+
+    <select id="selectAll" resultType="FileUploadDto">
+        SELECT * FROM imgtbl
+        ORDER BY title ASC;
+    </select>
+</mapper>

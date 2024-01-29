@@ -1,10 +1,8 @@
 package com.mywebsite.www.controller;
 
-import com.mywebsite.www.domain.BoardDto;
-import com.mywebsite.www.domain.PageHandler;
-import com.mywebsite.www.domain.SearchCondition;
-import com.mywebsite.www.domain.UserDto;
+import com.mywebsite.www.domain.*;
 import com.mywebsite.www.service.BoardService;
+import com.mywebsite.www.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +20,8 @@ import java.util.List;
 public class BoardController {
     @Autowired
     BoardService boardService;
+    @Autowired
+    CommentService commentService;
 
     @GetMapping("/boardList")
     public String myBoard(Integer page, SearchCondition sc, HttpServletRequest request, HttpSession session, Model m, RedirectAttributes rattr) {
@@ -97,6 +97,8 @@ public class BoardController {
             System.out.println("[read] page = " + page);
             System.out.println("bno = " + bno);
             BoardDto boardDto = boardService.read(bno);
+//            List<CommentDto> commentList = commentService.readAll(bno);
+//            m.addAttribute("commentList",commentList);
             m.addAttribute("sc",sc);
 //            m.addAttribute("page",page); //myPost로 전달이 안된다. 그냥 page로 적으면 안됨. 숫자가 들어가는거라서.
             m.addAttribute(boardDto);
@@ -185,8 +187,17 @@ public class BoardController {
 
 
     @PostMapping("/write")
-    public String write(BoardDto boardDto, Model m, RedirectAttributes rattr) throws Exception {
+    public String write(BoardDto boardDto, Model m, RedirectAttributes rattr, HttpServletRequest request) throws Exception {
+        Enumeration<String> params = request.getParameterNames();
+        System.out.println("params = " + params);
+        while(params.hasMoreElements()){
+            String param = params.nextElement();
+            System.out.println("params.nextElement() = " + param);
+            System.out.println("request.getParameter("+param+") = " + request.getParameter(param));
+
+        }
         try {
+            System.out.println("boardDto = " + boardDto);
             int rowCnt = boardService.write(boardDto);
             if(rowCnt==1){
                 rattr.addFlashAttribute("msg","WRT_OK");

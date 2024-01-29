@@ -22,7 +22,7 @@
     </select>
 
     <sql id="selectFromBoard">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date, up_date
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date, up_date, image
         FROM board
     </sql>
 
@@ -98,6 +98,15 @@
             (#{title}, #{content}, #{writer}) <!--괄호 빼먹으면 에러남. 사소한 건데 놓치기 쉬움-->
     </insert>
 
+<!--    &lt;!&ndash; 4. 게시물 쓰기 &ndash;&gt;-->
+<!--    <insert id="insert" parameterType="map">-->
+<!--        INSERT INTO board-->
+<!--        (title, content, writer, image)-->
+<!--        VALUES-->
+<!--        (#{boardDto.title}, #{boardDto.content}, #{boardDto.writer}, #{image}) &lt;!&ndash;괄호 빼먹으면 에러남. 사소한 건데 놓치기 쉬움&ndash;&gt;-->
+<!--    </insert>-->
+
+
     <!--5. 게시물 수정 (bno와 writer가 모두 같을 때 한정) -->
     <update id="update" parameterType="BoardDto">
         UPDATE board
@@ -130,9 +139,21 @@
         WHERE bno = #{bno}
     </update>
 
+    <update id="increaseCommentCnt" parameterType="map">
+        UPDATE board
+        SET comment_cnt = comment_cnt + #{cnt}
+        WHERE bno = #{bno}
+    </update>
+
     <update id="initPk">
         ALTER table board
         auto_increment = 1;
+    </update>
+
+    <update id="setComment0" parameterType="int">
+        update board
+        set comment_cnt = 0
+        WHERE bno = #{bno}
     </update>
 
 </mapper>

@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
@@ -58,16 +57,28 @@
     }
 
     .no      { width:150px;}
-    .title   { width:50%;  }
+    .title   { width:35%;  }
     .view_cnt { width:150px;}
     .reg_date { width:200px;}
 
-    td.title   { text-align: left;  }
+    td.title   {
+        text-align: left;
+        padding-left: 50px; }
     td.view_cnt { text-align: right; }
 
     td.title:hover {
         text-decoration: underline;
     }
+    /*span.comment-border {*/
+    /*    display: inline-block;*/
+    /*    width: 17px;*/
+    /*    height: 17px;*/
+    /*    border : 1px solid black;*/
+    /*    background-color: #d9d9d9;*/
+    /*    text-align: center;*/
+    /*    line-height: 17px;*/
+    /*    border-radius: 50%;*/
+    /*}*/
     .wrtBtn {
         /*position: absolute;*/
         right: 0;
@@ -122,6 +133,7 @@
             <tr>
                 <th class="no"> 글번호 </th>
                 <th class="title"> 제목 </th>
+                <th class="comment"> 댓글 </th>
                 <th class="writer"> 작성자 </th>
                 <th class="view_cnt"> 조회수 </th>
                 <th class="reg_date"> 등록일 </th>
@@ -132,7 +144,8 @@
                     <td class="no">  ${boardDto.bno} </td>
 <%--                    <td class="no" style="cursor:pointer" onclick="location.href='<c:url value="/board/read?bno=${boardDto.bno}&page=${ph.page}"/>'"> ${boardDto.title} </a></td>--%>
 <%--                    <td class="no" style="cursor:pointer"><a href="<c:url value='/board/read?bno=${boardDto.bno}&page=${ph.sc.page}&option=${sc.option}&keyword=${sc.keyword}'/>"> ${boardDto.title} </a></td>--%>
-                    <td class="no" style="cursor:pointer"><a href="<c:url value='/board/read${sc.queryParam}&bno=${boardDto.bno}'/>">${boardDto.title} <i class="far fa-regular fa-comment" value="a"></i> </a></td>
+                    <td class="title" style="cursor:pointer" onclick="location.href='<c:url value="/board/read${sc.queryParam}&bno=${boardDto.bno}"/>'">${boardDto.title}</td>
+                    <td class="comment"> <span class="comment-border">(${boardDto.comment_cnt})</span></td>
                     <td class="writer">  ${boardDto.writer} </td>
                     <td class="view_cnt">  ${boardDto.view_cnt} </td>
                     <fmt:formatDate value="${boardDto.reg_date}" type="both" pattern="hh:mm YY/MM/dd" var="date"/>

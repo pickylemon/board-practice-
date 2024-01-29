@@ -27,7 +27,9 @@ public class BoardDaoImpl implements BoardDao {
     //게시글 하나 읽기
     @Override
     public BoardDto select(Integer bno) throws Exception{
-        return session.selectOne(namespace+"select",bno);
+        BoardDto boardDto = session.selectOne(namespace+"select",bno);
+        System.out.println("boardDto = " + boardDto);
+        return boardDto;
     }
     //게시글 목록 가져오기
     @Override
@@ -63,6 +65,11 @@ public class BoardDaoImpl implements BoardDao {
         return session.insert(namespace+"insert", boardDto);
     }
 
+//    @Override
+//    public int insert(Map map) throws Exception {
+//        return session.insert(namespace+"insert", map);
+//    }
+
     //게시글 수정
     @Override
     public int update(BoardDto boardDto) throws Exception {
@@ -95,6 +102,20 @@ public class BoardDaoImpl implements BoardDao {
 //        throw new Exception("Tx test");
         return session.update(namespace+"increaseViewCnt", bno);
     }
+
+    @Override
+    public int increaseCommentCnt(Integer bno, Integer cnt) throws Exception {
+        Map map = new HashMap();
+        map.put("bno",bno);
+        map.put("cnt",cnt);
+        return session.update(namespace+"increaseCommentCnt", map);
+    }
+
+    @Override
+    public int setComment0(Integer bno) throws Exception {
+        return session.update(namespace+"setComment0",bno);
+    }
+
 
 //    @Override
 //    public void initPk() throws Exception {

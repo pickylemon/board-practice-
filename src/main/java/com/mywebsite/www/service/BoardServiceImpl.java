@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,40 @@ public class BoardServiceImpl implements BoardService {
     public int write(BoardDto boardDto) throws Exception {
         return boardDao.insert(boardDto);
     }
+//    @Override
+//    public int write(BoardDto boardDto) throws Exception {
+//        byte[] image = imgToByteArray(boardDto.getImage());
+//        Map map = new HashMap();
+//        map.put("boardDto",boardDto);
+//        map.put("image", image);
+//        return boardDao.insert(map);
+//    }
+
+//    public static byte[] imgToByteArray(String filePath) throws Exception {
+//        byte[] img = null;
+//        ByteArrayOutputStream baos = null;
+//        FileInputStream fis = null;
+//        try {
+//            baos = new ByteArrayOutputStream();
+//            fis = new FileInputStream(filePath);
+//
+//            byte[] buf = new byte[1024];
+//            int read = 0;
+//
+//            while((read=fis.read(buf, 0, buf.length))!=-1){
+//                baos.write(buf, 0, read);
+//            }
+//            img = baos.toByteArray();
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        } finally {
+//            if (baos!=null)
+//                baos.close();
+//            if (fis!=null)
+//                fis.close();
+//        }
+//        return img;
+//    }
     //게시물 수정
     @Override
     public int modify(BoardDto boardDto) throws Exception {
@@ -79,6 +115,12 @@ public class BoardServiceImpl implements BoardService {
     public int removeAll() throws Exception {
         return boardDao.deleteAll();
     }
+
+    public int increaseCommentCnt(Integer bno, Integer cnt) throws Exception {
+        return boardDao.increaseCommentCnt(bno, cnt);
+    }
+
+
 
 //    private void initPk() throws Exception {
 //        boardDao.initPk();
